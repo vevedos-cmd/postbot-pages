@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta property="og:type" content="website"><meta property="og:url" content="https://vevedos-cmd.github.io/postbot-pages/dashboard"><meta property="og:title" content="INSIDER SIGNALS TERMINAL"><meta property="og:description" content="INSIDER SIGNALS TERMINAL"><meta property="og:image" content="https://i.ibb.co/X6TkgVc/photo.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="INSIDER SIGNALS TERMINAL"><meta name="twitter:image" content="https://i.ibb.co/X6TkgVc/photo.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>INSIDER SIGNALS TERMINAL</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--P0:#080700;--P1:#110e00;--P2:#181300;--P3:#211900;--P4:#2c2200;--P5:#3a2e00;
+--A0:#ff9800;--A1:#ffb700;--A2:#ffd060;--AD:rgba(255,190,0,.92);--AF:rgba(255,170,0,.60);
+--GR:#00ff88;--RD:#ff5050;--BL:#00c8ff;--PU:#cc88ff;
+--glow-sm:0 0 7px rgba(255,152,0,.55);--glow-md:0 0 14px rgba(255,152,0,.45),0 0 28px rgba(255,152,0,.18);
+--f-disp:'VT323','Courier New',monospace;--f-ui:'IBM Plex Mono','Courier New',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f-ui);font-size:14px;color:var(--A0);background:var(--P0);min-height:100dvh;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px);pointer-events:none;z-index:9999}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.48) 100%);pointer-events:none;z-index:9998}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes glowPulse{0%,100%{text-shadow:0 0 8px rgba(255,152,0,.7)}50%{text-shadow:0 0 18px rgba(255,200,0,1),0 0 36px rgba(255,152,0,.4)}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes scrollLeft{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.blink{animation:blink 1s step-end infinite}
+::-webkit-scrollbar{width:5px;background:var(--P1)}::-webkit-scrollbar-thumb{background:var(--P5)}
+.wrap{max-width:1480px;margin:0 auto;padding:1rem 1.5rem}
+.hdr{border:1px solid var(--P5);border-bottom:2px solid var(--A0);background:var(--P1);padding:.75rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;box-shadow:var(--glow-sm)}
+.hdr-logo{display:flex;align-items:center;gap:.75rem}
+.logo-box{width:48px;height:48px;border:1px solid var(--A0);background:var(--P2);display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm);flex-shrink:0}
+.hdr-title{font-family:var(--f-disp);font-size:34px;color:var(--A1);text-shadow:var(--glow-md);letter-spacing:.06em;line-height:1}
+.hdr-sub{font-size:12px;color:var(--AD);letter-spacing:.03em;text-transform:uppercase;margin-top:3px;font-weight:500}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--GR);letter-spacing:.03em;border:1px solid rgba(0,255,136,.3);padding:2px .75rem;background:rgba(0,255,136,.05)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--GR);box-shadow:0 0 6px var(--GR);animation:blink 1.5s ease-in-out infinite}
+.ts{font-size:12px;color:var(--AD)}
+.boot{font-size:13px;color:var(--AD);letter-spacing:.03em;padding:.5rem 0;border-bottom:1px dashed var(--P5);margin-bottom:.75rem;display:flex;gap:1rem;flex-wrap:wrap;font-weight:500}
+.boot span{opacity:0;animation:fadeIn .3s ease forwards}
+.boot span:nth-child(1){animation-delay:.1s}.boot span:nth-child(2){animation-delay:.4s}.boot span:nth-child(3){animation-delay:.7s}.boot span:nth-child(4){animation-delay:1s}.boot span:nth-child(5){animation-delay:1.3s}
+.ticker-bar{overflow:hidden;background:var(--P1);border:1px solid var(--P5);border-top:1px solid var(--A0);padding:5px 0;margin-bottom:1rem}
+.ticker-inner{display:flex;gap:2rem;white-space:nowrap;animation:scrollLeft 35s linear infinite;padding:0 1rem}
+.tick-item{font-size:13px;color:var(--A0);letter-spacing:.02em}
+.tick-item .sym{color:var(--A1);margin-right:6px;font-weight:600}
+.tup{color:var(--GR)}.tdn{color:var(--RD)}
+.sec-label{font-size:12px;color:var(--A0);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem;font-weight:600}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--P5),transparent)}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1rem}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
+.kpi{background:var(--P1);border:1px solid var(--P5);padding:.75rem 1rem;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi::after{content:'▪';position:absolute;bottom:4px;right:6px;font-size:9px;color:var(--P5)}
+.kpi.ku::before{background:var(--A1)}.kpi.kup::before{background:var(--GR)}.kpi.kdn::before{background:var(--RD)}.kpi.kg::before{background:var(--A2)}.kpi.kv::before{background:var(--PU)}
+.kpi-lbl{font-size:11px;color:var(--AD);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;font-weight:600}
+.kpi-val{font-family:var(--f-disp);font-size:38px;line-height:1;color:var(--A1);text-shadow:var(--glow-md)}
+.kpi.kup .kpi-val{color:var(--GR)}.kpi.kdn .kpi-val{color:var(--RD)}.kpi.kg .kpi-val{color:var(--A2)}.kpi.kv .kpi-val{color:var(--PU)}
+.kpi-chg{font-size:12px;margin-top:.25rem;font-weight:500}
+.up{color:var(--GR)}.dn{color:var(--RD)}.neu{color:var(--AD)}
+.panel{background:var(--P1);border:1px solid var(--P5);padding:1rem 1.25rem;position:relative;margin-bottom:1rem}
+.panel::before{content:'+';position:absolute;top:-1px;left:3px;font-size:10px;color:var(--P5);line-height:1}
+.panel::after{content:'+';position:absolute;bottom:-1px;right:3px;font-size:10px;color:var(--P5);line-height:1}
+.ph{position:relative;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--P4)}
+.pt{font-size:13px;color:var(--A1);letter-spacing:.04em;text-transform:uppercase;text-shadow:var(--glow-sm);display:flex;align-items:center;gap:.5rem;font-weight:600}
+.pbadge{font-size:11px;padding:1px 7px;border:1px solid var(--A0);color:var(--A0);background:rgba(255,152,0,.06);letter-spacing:.02em;font-weight:500}
+.cw{position:relative;width:100%;background:var(--P1)}
+.cw.h500{height:500px}.cw.h400{height:400px}.cw.h340{height:340px}.cw.h260{height:260px}.cw.h220{height:220px}
+.cw canvas{width:100%!important;height:100%!important;display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.ftbl{width:100%;border-collapse:collapse;font-size:13px}
+.ftbl th{text-align:left;padding:3px .75rem;color:var(--A1);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px dashed var(--P5);font-size:11px;font-weight:600}
+.ftbl td{padding:.5rem .75rem;border-bottom:1px solid var(--P3);color:var(--A0)}
+.ftbl tr:last-child td{border-bottom:none}.ftbl tr:hover td{background:var(--P2)}
+.tr{text-align:right}.tdg{color:var(--GR)!important}.tdr{color:var(--RD)!important}.tda{color:var(--A1)!important}
+.sb{font-size:11px;padding:1px 7px;letter-spacing:.02em;text-transform:uppercase;border:1px solid;font-weight:600;display:inline-block}
+.sb.buy{color:var(--GR);border-color:rgba(0,255,136,.35);background:rgba(0,255,136,.07)}
+.sb.sell{color:var(--RD);border-color:rgba(255,80,80,.35);background:rgba(255,80,80,.07)}
+.sb.neu{color:var(--AD);border-color:var(--P5);background:var(--P2)}
+.brush-hint{font-size:11px;color:var(--AF);letter-spacing:.03em}
+.ftr{border-top:1px solid var(--P5);margin-top:1.5rem;padding:1rem 0 2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.ftr-l,.ftr-r{font-size:11px;color:var(--AF);letter-spacing:.04em}
+.ftr-r{max-width:500px;text-align:right;line-height:1.7}
+</style>
+</head>
+<body class="screen"><div class="wrap">
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="logo-box">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="5" fill="#ffb700"/>
+        <circle cx="18" cy="18" r="10" stroke="#ffb700" stroke-width="1" stroke-opacity=".5" fill="none"/>
+        <circle cx="18" cy="18" r="15" stroke="#ffb700" stroke-width="0.8" stroke-opacity=".25" fill="none" stroke-dasharray="3 2"/>
+        <line x1="3" y1="18" x2="33" y2="18" stroke="#ffb700" stroke-width=".7" stroke-opacity=".35"/>
+        <line x1="18" y1="3" x2="18" y2="33" stroke="#ffb700" stroke-width=".7" stroke-opacity=".35"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hdr-title">INSIDER SIGNALS TERMINAL</div>
+      <div class="hdr-sub">S&P 500 · INSIDER BUY/SELL ANALYTICS · OPENINSIDER / YAHOO FINANCE</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div class="live-badge"><span class="dot"></span>SYS LIVE</div>
+      <div class="ts" id="ts">──</div>
+    </div>
+  </div>
+</header>
+<div class="boot"><span>■ SYSTEM READY</span><span>■ FEED: OPENINSIDER + YAHOO FINANCE</span><span>■ SPX: 6,583</span><span>■ P/S 10D: 0.48</span><span>■ INSIDER SCORE: 0<span class="blink">_</span></span></div>
+<div class="ticker-bar"><div class="ticker-inner"><span class="tick-item"><span class="sym">^GSPC</span>6,583 <span class="tup">▲+16.1%</span></span><span class="tick-item"><span class="sym">P/S 10D</span>0.48 <span class="tdn">── NEUTRAL</span></span><span class="tick-item"><span class="sym">SCORE</span>0 <span class="tdn">▼ SELL</span></span><span class="tick-item"><span class="sym">ATH DD</span>-5.7% <span class="tdn">▼ DRAWDOWN</span></span><span class="tick-item"><span class="sym">BUY SIG</span>1 <span class="tup">▲ TOTAL</span></span><span class="tick-item"><span class="sym">^GSPC</span>6,583 <span class="tup">▲+16.1%</span></span><span class="tick-item"><span class="sym">P/S 10D</span>0.48 <span class="tdn">── NEUTRAL</span></span><span class="tick-item"><span class="sym">SCORE</span>0 <span class="tdn">▼ SELL</span></span><span class="tick-item"><span class="sym">ATH DD</span>-5.7% <span class="tdn">▼ DRAWDOWN</span></span><span class="tick-item"><span class="sym">BUY SIG</span>1 <span class="tup">▲ TOTAL</span></span></div></div>
+
+<div class="sec-label">[ MARKET SNAPSHOT · DATA AS OF 02 APR 2026 ]</div>
+<div class="kpi-row">
+  <div class="kpi ku">
+    <div class="kpi-lbl">▸ SPX CLOSE</div>
+    <div class="kpi-val">6,583</div>
+    <div class="kpi-chg up">▲ +16.1% 1Y</div>
+  </div>
+  <div class="kpi kup">
+    <div class="kpi-lbl">▸ 1Y CHANGE</div>
+    <div class="kpi-val">+16.1%</div>
+    <div class="kpi-chg up">▲ 5,671 → 6,583</div>
+  </div>
+  <div class="kpi kdn">
+    <div class="kpi-lbl">▸ ATH DRAWDOWN</div>
+    <div class="kpi-val">-5.7%</div>
+    <div class="kpi-chg dn">▼ FROM ATH 6,979</div>
+  </div>
+  <div class="kpi kg">
+    <div class="kpi-lbl">▸ P/S RATIO 10D</div>
+    <div class="kpi-val">0.48</div>
+    <div class="kpi-chg neu">── NEUTRAL · MED 0.39</div>
+  </div>
+  <div class="kpi ku">
+    <div class="kpi-lbl">▸ INSIDER SCORE</div>
+    <div class="kpi-val">0</div>
+    <div class="kpi-chg neu">RANGE [-4 … +4]</div>
+  </div>
+</div>
+<div class="sec-label">[ S&P 500 PRICE + INSIDER SIGNALS ]</div>
+<div class="panel">
+  <div class="ph">
+    <div class="pt">▸ SPX CLOSE + MA50/MA200 <span class="pbadge">INSIDER MARKERS</span></div>
+    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+      <span class="pbadge" style="color:#ffd060;border-color:#ffd060">★ CRISIS BOTTOM</span>
+      <span class="pbadge" style="color:#00ff88;border-color:#00ff88">▲ REGIME SHIFT</span>
+      <span class="pbadge" style="color:#00c8ff;border-color:#00c8ff">● CLUSTER BUY</span>
+      <span class="pbadge" style="color:#cc88ff;border-color:#cc88ff">◆ OVERSOLD+INS</span>
+      <span class="brush-hint">⟵ drag to select</span>
+      <span id="brushRangeLabel" style="font-size:11px;color:var(--GR);font-weight:600;letter-spacing:.03em"></span>
+          </div>
+  </div>
+  <div class="cw h400"><canvas id="cSpx"></canvas></div>
+</div>
+<div class="sec-label">[ INSIDER P/S RATIO PANELS ]</div>
+<div class="panel">
+  <div class="ph"><div class="pt">▸ P/S RATIO (RAW) <span class="pbadge">DAILY</span></div><div style="font-size:11px;color:var(--AD)">── <span style="color:#ffb700;font-weight:600">MEDIAN</span> ── <span style="color:rgba(255,200,0,.6)">MEAN</span> ── <span style="color:#00e5ff">P75</span> ── <span style="color:#ff4444">P25</span>
+      </div></div>
+  <div class="cw h220"><canvas id="cPs"></canvas></div>
+</div>
+<div class="grid2">
+  <div class="panel">
+    <div class="ph"><div class="pt">▸ P/S RATIO <span class="pbadge">3-DAY AVG</span></div><div style="font-size:11px;color:var(--AD)">── <span style="color:#ffb700;font-weight:600">MEDIAN</span> ── <span style="color:rgba(255,200,0,.6)">MEAN</span> ── <span style="color:#00e5ff">P75</span> ── <span style="color:#ff4444">P25</span>
+      </div></div>
+    <div class="cw h220"><canvas id="cPs3"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="pt">▸ P/S RATIO <span class="pbadge">10-DAY AVG</span></div><div style="font-size:11px;color:var(--AD)">── <span style="color:#ffb700;font-weight:600">MEDIAN</span> ── <span style="color:rgba(255,200,0,.6)">MEAN</span> ── <span style="color:#00e5ff">P75</span> ── <span style="color:#ff4444">P25</span>
+      </div></div>
+    <div class="cw h220"><canvas id="cPs10"></canvas></div>
+  </div>
+</div>
+<div class="sec-label">[ COMPOSITE INSIDER SCORE ]</div>
+<div class="panel">
+  <div class="ph">
+    <div class="pt">▸ COMPOSITE INSIDER SCORE <span class="pbadge">RANGE [-4 … +4]</span></div>
+    <div>
+      <span class="pbadge" style="color:#00ff88;border-color:#00ff88">▲ BUY PRESSURE</span>
+      <span class="pbadge" style="color:#ff5050;border-color:#ff5050;margin-left:.4rem">▼ SELL PRESSURE</span>
+          </div>
+  </div>
+  <div class="cw h220"><canvas id="cScore"></canvas></div>
+</div>
+<footer class="ftr">
+  <div class="ftr-l">INSIDER SIGNALS TERMINAL · S&P 500 · OPENINSIDER / YAHOO FINANCE</div>
+  <div class="ftr-r">FOR INFORMATIONAL PURPOSES ONLY · NOT FINANCIAL ADVICE</div>
+</footer>
+</div>
+<script>
+
+const F="'IBM Plex Mono','Courier New',monospace";
+const C={
+  a:'#ff9800', ab:'#ffb700', ah:'#ffd060',
+  gr:'#00ff88', rd:'#ff5050', bl:'#00c8ff', pu:'#cc88ff',
+  grid:'rgba(255,152,0,0.08)', tick:'rgba(255,195,0,0.92)',
+  ttBg:'#110e00', ttB:'rgba(255,152,0,0.4)'
+};
+const TT = () => ({
+  backgroundColor: C.ttBg, borderColor: C.ttB, borderWidth: 1, padding: 10,
+  titleColor: C.tick, bodyColor: C.a,
+  titleFont: {family:F, size:12, weight:'500'},
+  bodyFont:  {family:F, size:12, weight:'500'},
+  filter: function(item) { return item.dataset.label !== '_ref'; }
+});
+const TK = (sz) => ({ color: C.tick, font: {family:F, size:sz||11, weight:'500'} });
+
+(()=>{
+  const el = document.getElementById('ts');
+  if (!el) return;
+  const n = new Date();
+  const mo = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][n.getMonth()];
+  el.textContent = String(n.getDate()).padStart(2,'0')+' '+mo+' '+n.getFullYear()+
+    ' // '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+' CEST';
+})();
+
+function hline(val, color, dash, lbl) {
+  var n = 2;
+  try { n = DATES.length; } catch(e) {}
+  var label = lbl ? lbl : '_ref';
+  // Array.isArray so [] → solid, [x,y] → dashed, null/undef → default dash
+  var bd = Array.isArray(dash) ? dash : [5,4];
+  return {
+    type:'line', label: label,
+    data: Array(n).fill(val),
+    borderColor: color || 'rgba(255,152,0,0.3)',
+    borderWidth: lbl === 'MEDIAN' ? 2.5 : 1.5,
+    borderDash: bd,
+    pointRadius: 0, fill: false,
+    order: -1   // draw on TOP of data lines
+  };
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  CROSSHAIR PLUGIN
+// ═══════════════════════════════════════════════════════════════
+const crosshairPlugin = {
+  id: 'crosshair',
+  afterDraw(chart) {
+    const active = chart.tooltip._active;
+    if (!active || !active.length) return;
+    const el = active[0].element;
+    if (!el) return;
+    const ctx = chart.ctx;
+    const {top, bottom} = chart.chartArea;
+    const x = el.x;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, bottom);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(255,183,0,0.55)';
+    ctx.setLineDash([4,3]);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, bottom, 3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,183,0,0.8)';
+    ctx.fill();
+    ctx.restore();
+  }
+};
+Chart.register(crosshairPlugin);
+
+// ═══════════════════════════════════════════════════════════════
+//  BRUSH SELECTION PLUGIN (показывает выделение на всех графиках)
+// ═══════════════════════════════════════════════════════════════
+window._brushRange = null;  // {lo, hi} в пикселях chartArea
+
+const brushBandPlugin = {
+  id: 'brushBand',
+  afterDraw(chart) {
+    if (!window._brushRange) return;
+    // r1/r2 are normalised ratios [0..1] — identical date range on every chart
+    const {r1, r2} = window._brushRange;
+    const ca  = chart.chartArea;
+    const ctx = chart.ctx;
+    // Convert ratios → pixels for THIS chart's chartArea
+    const bxL = ca.left + Math.min(r1, r2) * (ca.right - ca.left);
+    const bxR = ca.left + Math.max(r1, r2) * (ca.right - ca.left);
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,183,0,0.10)';
+    ctx.fillRect(bxL, ca.top, bxR - bxL, ca.bottom - ca.top);
+    ctx.strokeStyle = 'rgba(255,183,0,0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(bxL, ca.top); ctx.lineTo(bxL, ca.bottom);
+    ctx.moveTo(bxR, ca.top); ctx.lineTo(bxR, ca.bottom);
+    ctx.stroke();
+    const n = chart.data.labels.length;
+    if (n < 2) { ctx.restore(); return; }
+    const rL   = Math.min(r1, r2);
+    const rR   = Math.max(r1, r2);
+    const idx1 = Math.round(Math.max(0, Math.min(1, rL)) * (n - 1));
+    const idx2 = Math.round(Math.max(0, Math.min(1, rR)) * (n - 1));
+    const lbl1 = chart.data.labels[idx1] || '';
+    const lbl2 = chart.data.labels[idx2] || '';
+    ctx.fillStyle = 'rgba(255,183,0,0.85)';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace";
+    ctx.textAlign = 'left';  ctx.fillText(lbl1, bxL + 4, ca.top + 14);
+    ctx.textAlign = 'right'; ctx.fillText(lbl2, bxR - 4, ca.top + 14);
+    ctx.restore();
+  }
+};
+Chart.register(brushBandPlugin);
+
+// ═══════════════════════════════════════════════════════════════
+//  SYNC ENGINE
+// ═══════════════════════════════════════════════════════════════
+window._SYNC_CHARTS = [];
+
+function _initSync() {
+  var charts = window._SYNC_CHARTS;
+  if (charts.length < 2) return;
+
+  function clearAll() {
+    charts.forEach(function(c) {
+      c.tooltip.setActiveElements([], {});
+      c.update('none');
+    });
+  }
+
+  charts.forEach(function(src) {
+    src.canvas.addEventListener('mousemove', function(e) {
+      if (window._brushDragging) return;  // don't sync while selecting
+      var pts = src.getElementsAtEventForMode(e, 'index', {intersect:false}, false);
+      if (!pts.length) return;
+      var idx = pts[0].index;
+      charts.forEach(function(tgt) {
+        var actives = [];
+        tgt.data.datasets.forEach(function(ds, di) {
+          if (ds.type === 'scatter') return;
+          if (ds.label === '_ref') return;
+          if (idx < ds.data.length) actives.push({datasetIndex:di, index:idx});
+        });
+        if (actives.length) {
+          tgt.tooltip.setActiveElements(actives, {x:0,y:0});
+          tgt.update('none');
+        }
+      });
+    });
+    src.canvas.addEventListener('mouseleave', function() {
+      if (window._brushDragging) return;
+      clearAll();
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BRUSH / ZOOM ENGINE
+// ═══════════════════════════════════════════════════════════════
+window._brushDragging = false;
+function _pixelToIndex(chart, clientX) {
+  var rect = chart.canvas.getBoundingClientRect();
+  var xPos = clientX - rect.left;
+  var ca   = chart.chartArea;
+  var n    = chart.data.labels.length;
+  if (n < 2) return 0;
+  var ratio = (xPos - ca.left) / (ca.right - ca.left);
+  ratio = Math.max(0, Math.min(1, ratio));
+  return Math.round(ratio * (n - 1));
+}
+
+function _clientXtoPixel(chart, clientX) {
+  var rect = chart.canvas.getBoundingClientRect();
+  return clientX - rect.left;
+}
+
+function _initBrush() {
+  var charts = window._SYNC_CHARTS;
+
+  charts.forEach(function(chart) {
+    var canvas = chart.canvas;
+    var startR = null;  // normalised ratio [0..1] at drag start
+
+    canvas.style.cursor = 'crosshair';
+
+    canvas.addEventListener('mousedown', function(e) {
+      if (e.button !== 0) return;
+      var rect = canvas.getBoundingClientRect();
+      var xPos = e.clientX - rect.left;
+      var ca   = chart.chartArea;
+      if (xPos < ca.left || xPos > ca.right) return;
+      startR = Math.max(0, Math.min(1, (xPos - ca.left) / (ca.right - ca.left)));
+      window._brushDragging = true;
+      window._brushRange = {r1: startR, r2: startR};
+      e.preventDefault();
+    });
+
+    canvas.addEventListener('mousemove', function(e) {
+      if (!window._brushDragging || startR === null) return;
+      var rect = canvas.getBoundingClientRect();
+      var xPos = e.clientX - rect.left;
+      var ca   = chart.chartArea;
+      var curR = Math.max(0, Math.min(1, (xPos - ca.left) / (ca.right - ca.left)));
+      window._brushRange = {r1: startR, r2: curR};
+      charts.forEach(function(c) { c.update('none'); });
+    });
+  });
+
+  // mouseup — keep band visible, just stop dragging
+  document.addEventListener('mouseup', function(e) {
+    if (!window._brushDragging) return;
+    window._brushDragging = false;
+    var br = window._brushRange;
+    if (!br) return;
+    var r1 = Math.min(br.r1, br.r2);
+    var r2 = Math.max(br.r1, br.r2);
+    // Too small → clear selection
+    if ((r2 - r1) < 0.005) {
+      window._brushRange = null;
+      charts.forEach(function(c) { c.update('none'); });
+      var lbl = document.getElementById('brushRangeLabel');
+      if (lbl) lbl.textContent = '';
+      return;
+    }
+    // Show date range label using primary chart labels
+    var primary = charts[0];
+    var n = primary.data.labels.length;
+    if (n < 2) return;
+    var lo  = Math.round(r1 * (n - 1));
+    var hi  = Math.round(r2 * (n - 1));
+    var lbl = document.getElementById('brushRangeLabel');
+    if (lbl) {
+      lbl.textContent = primary.data.labels[lo] + ' → ' + primary.data.labels[hi];
+    }
+    charts.forEach(function(c) { c.update('none'); });
+  });
+
+  // Click without drag → clear selection
+  document.addEventListener('click', function(e) {
+    if (window._brushDragging) return;
+    var onCanvas = window._SYNC_CHARTS.some(function(c) {
+      return e.target === c.canvas;
+    });
+    if (!onCanvas) return;
+    if (window._brushRange && Math.abs(window._brushRange.r2 - window._brushRange.r1) < 0.005) {
+      window._brushRange = null;
+      window._SYNC_CHARTS.forEach(function(c) { c.update('none'); });
+      var lbl = document.getElementById('brushRangeLabel');
+      if (lbl) lbl.textContent = '';
+    }
+  });
+}
+// ── Link appended inline after every chart title (.pt) ────────
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.pt').forEach(function(pt) {
+    var sep = document.createElement('span');
+    sep.textContent = '·';
+    sep.style.cssText = [
+      'color:rgba(255,152,0,0.22)',
+      'font-size:10px',
+      'margin-left:.35rem',
+      'user-select:none'
+    ].join(';');
+    var a = document.createElement('a');
+    a.href = 'https://t.me/hugodenaranja';
+    a.target = '_blank';
+    a.textContent = 't.me/hugodenaranja';
+    a.style.cssText = [
+      'font-size:10px', 'font-weight:600',
+      'color:rgba(255,152,0,0.38)',
+      'text-decoration:none',
+      'letter-spacing:.07em',
+      "font-family:'IBM Plex Mono',monospace",
+      'transition:color .2s',
+      'white-space:nowrap',
+      'text-transform:lowercase',
+      'text-shadow:none',
+      'pointer-events:auto'
+    ].join(';');
+    a.addEventListener('mouseover', function(){ this.style.color='rgba(255,152,0,0.85)'; });
+    a.addEventListener('mouseout',  function(){ this.style.color='rgba(255,152,0,0.38)'; });
+    pt.appendChild(sep);
+    pt.appendChild(a);
+  });
+});
+
+// === DATA ===
+const DATES = ["2022-01-03", "2022-01-05", "2022-01-07", "2022-01-11", "2022-01-13", "2022-01-18", "2022-01-20", "2022-01-24", "2022-01-26", "2022-01-28", "2022-02-01", "2022-02-03", "2022-02-07", "2022-02-09", "2022-02-11", "2022-02-15", "2022-02-17", "2022-02-22", "2022-02-24", "2022-02-28", "2022-03-02", "2022-03-04", "2022-03-08", "2022-03-10", "2022-03-14", "2022-03-16", "2022-03-18", "2022-03-22", "2022-03-24", "2022-03-28", "2022-03-30", "2022-04-01", "2022-04-05", "2022-04-07", "2022-04-11", "2022-04-13", "2022-04-18", "2022-04-20", "2022-04-22", "2022-04-26", "2022-04-28", "2022-05-02", "2022-05-03", "2022-05-04", "2022-05-06", "2022-05-10", "2022-05-12", "2022-05-16", "2022-05-18", "2022-05-20", "2022-05-24", "2022-05-26", "2022-05-31", "2022-06-02", "2022-06-06", "2022-06-08", "2022-06-10", "2022-06-14", "2022-06-16", "2022-06-21", "2022-06-23", "2022-06-27", "2022-06-29", "2022-07-01", "2022-07-06", "2022-07-08", "2022-07-12", "2022-07-14", "2022-07-18", "2022-07-20", "2022-07-22", "2022-07-26", "2022-07-28", "2022-08-01", "2022-08-03", "2022-08-05", "2022-08-09", "2022-08-11", "2022-08-15", "2022-08-17", "2022-08-19", "2022-08-23", "2022-08-25", "2022-08-29", "2022-08-31", "2022-09-02", "2022-09-07", "2022-09-09", "2022-09-13", "2022-09-15", "2022-09-19", "2022-09-21", "2022-09-23", "2022-09-27", "2022-09-29", "2022-10-03", "2022-10-05", "2022-10-07", "2022-10-12", "2022-10-14", "2022-10-18", "2022-10-20", "2022-10-24", "2022-10-26", "2022-10-28", "2022-11-01", "2022-11-03", "2022-11-07", "2022-11-09", "2022-11-14", "2022-11-16", "2022-11-18", "2022-11-22", "2022-11-25", "2022-11-29", "2022-12-01", "2022-12-05", "2022-12-07", "2022-12-09", "2022-12-13", "2022-12-15", "2022-12-19", "2022-12-21", "2022-12-23", "2022-12-28", "2022-12-30", "2023-01-04", "2023-01-06", "2023-01-10", "2023-01-12", "2023-01-17", "2023-01-19", "2023-01-23", "2023-01-25", "2023-01-27", "2023-01-31", "2023-02-02", "2023-02-06", "2023-02-08", "2023-02-10", "2023-02-14", "2023-02-16", "2023-02-21", "2023-02-23", "2023-02-27", "2023-03-01", "2023-03-03", "2023-03-07", "2023-03-09", "2023-03-13", "2023-03-15", "2023-03-17", "2023-03-21", "2023-03-23", "2023-03-27", "2023-03-29", "2023-03-31", "2023-04-04", "2023-04-06", "2023-04-11", "2023-04-13", "2023-04-17", "2023-04-19", "2023-04-21", "2023-04-25", "2023-04-27", "2023-05-01", "2023-05-03", "2023-05-05", "2023-05-09", "2023-05-11", "2023-05-15", "2023-05-17", "2023-05-19", "2023-05-23", "2023-05-25", "2023-05-30", "2023-06-01", "2023-06-05", "2023-06-07", "2023-06-09", "2023-06-13", "2023-06-15", "2023-06-16", "2023-06-20", "2023-06-22", "2023-06-26", "2023-06-28", "2023-06-30", "2023-07-05", "2023-07-07", "2023-07-11", "2023-07-13", "2023-07-17", "2023-07-19", "2023-07-21", "2023-07-25", "2023-07-27", "2023-07-31", "2023-08-02", "2023-08-04", "2023-08-08", "2023-08-10", "2023-08-14", "2023-08-16", "2023-08-18", "2023-08-22", "2023-08-24", "2023-08-28", "2023-08-30", "2023-09-01", "2023-09-06", "2023-09-08", "2023-09-12", "2023-09-14", "2023-09-18", "2023-09-20", "2023-09-22", "2023-09-26", "2023-09-28", "2023-10-02", "2023-10-04", "2023-10-06", "2023-10-11", "2023-10-13", "2023-10-17", "2023-10-19", "2023-10-23", "2023-10-25", "2023-10-27", "2023-10-31", "2023-11-02", "2023-11-06", "2023-11-08", "2023-11-13", "2023-11-15", "2023-11-17", "2023-11-21", "2023-11-24", "2023-11-28", "2023-11-30", "2023-12-04", "2023-12-06", "2023-12-08", "2023-12-12", "2023-12-14", "2023-12-18", "2023-12-20", "2023-12-22", "2023-12-27", "2023-12-29", "2024-01-03", "2024-01-05", "2024-01-09", "2024-01-11", "2024-01-16", "2024-01-18", "2024-01-22", "2024-01-24", "2024-01-26", "2024-01-30", "2024-02-01", "2024-02-05", "2024-02-07", "2024-02-09", "2024-02-13", "2024-02-15", "2024-02-20", "2024-02-22", "2024-02-26", "2024-02-28", "2024-03-01", "2024-03-05", "2024-03-07", "2024-03-11", "2024-03-13", "2024-03-15", "2024-03-19", "2024-03-21", "2024-03-25", "2024-03-27", "2024-04-01", "2024-04-03", "2024-04-05", "2024-04-09", "2024-04-11", "2024-04-15", "2024-04-17", "2024-04-19", "2024-04-23", "2024-04-25", "2024-04-29", "2024-05-01", "2024-05-03", "2024-05-07", "2024-05-09", "2024-05-13", "2024-05-15", "2024-05-17", "2024-05-21", "2024-05-23", "2024-05-28", "2024-05-30", "2024-06-03", "2024-06-05", "2024-06-07", "2024-06-11", "2024-06-13", "2024-06-17", "2024-06-20", "2024-06-24", "2024-06-26", "2024-06-28", "2024-07-02", "2024-07-05", "2024-07-09", "2024-07-11", "2024-07-15", "2024-07-17", "2024-07-19", "2024-07-23", "2024-07-25", "2024-07-29", "2024-07-31", "2024-08-02", "2024-08-06", "2024-08-08", "2024-08-12", "2024-08-14", "2024-08-16", "2024-08-20", "2024-08-22", "2024-08-26", "2024-08-28", "2024-08-30", "2024-09-04", "2024-09-06", "2024-09-10", "2024-09-12", "2024-09-16", "2024-09-18", "2024-09-20", "2024-09-24", "2024-09-26", "2024-09-30", "2024-10-02", "2024-10-04", "2024-10-08", "2024-10-10", "2024-10-15", "2024-10-17", "2024-10-21", "2024-10-23", "2024-10-25", "2024-10-29", "2024-10-31", "2024-11-04", "2024-11-06", "2024-11-07", "2024-11-08", "2024-11-13", "2024-11-15", "2024-11-19", "2024-11-21", "2024-11-25", "2024-11-27", "2024-12-02", "2024-12-04", "2024-12-06", "2024-12-10", "2024-12-12", "2024-12-16", "2024-12-18", "2024-12-20", "2024-12-26", "2024-12-30", "2025-01-02", "2025-01-06", "2025-01-08", "2025-01-13", "2025-01-15", "2025-01-17", "2025-01-22", "2025-01-24", "2025-01-28", "2025-01-30", "2025-02-03", "2025-02-05", "2025-02-07", "2025-02-11", "2025-02-13", "2025-02-18", "2025-02-20", "2025-02-24", "2025-02-26", "2025-02-28", "2025-03-04", "2025-03-06", "2025-03-10", "2025-03-12", "2025-03-14", "2025-03-18", "2025-03-20", "2025-03-24", "2025-03-26", "2025-03-28", "2025-04-01", "2025-04-03", "2025-04-07", "2025-04-09", "2025-04-11", "2025-04-15", "2025-04-17", "2025-04-22", "2025-04-24", "2025-04-28", "2025-04-30", "2025-05-02", "2025-05-06", "2025-05-08", "2025-05-12", "2025-05-14", "2025-05-16", "2025-05-20", "2025-05-22", "2025-05-27", "2025-05-29", "2025-06-02", "2025-06-04", "2025-06-05", "2025-06-06", "2025-06-10", "2025-06-12", "2025-06-16", "2025-06-18", "2025-06-23", "2025-06-25", "2025-06-27", "2025-07-01", "2025-07-03", "2025-07-08", "2025-07-10", "2025-07-14", "2025-07-16", "2025-07-18", "2025-07-22", "2025-07-24", "2025-07-28", "2025-07-30", "2025-08-01", "2025-08-05", "2025-08-07", "2025-08-11", "2025-08-13", "2025-08-15", "2025-08-19", "2025-08-21", "2025-08-25", "2025-08-27", "2025-08-29", "2025-09-03", "2025-09-05", "2025-09-09", "2025-09-11", "2025-09-15", "2025-09-17", "2025-09-19", "2025-09-23", "2025-09-25", "2025-09-29", "2025-10-01", "2025-10-03", "2025-10-07", "2025-10-09", "2025-10-14", "2025-10-16", "2025-10-20", "2025-10-22", "2025-10-24", "2025-10-28", "2025-10-30", "2025-11-03", "2025-11-05", "2025-11-07", "2025-11-12", "2025-11-14", "2025-11-18", "2025-11-20", "2025-11-24", "2025-11-26", "2025-12-01", "2025-12-03", "2025-12-05", "2025-12-09", "2025-12-11", "2025-12-15", "2025-12-17", "2025-12-19", "2025-12-23", "2025-12-30", "2026-01-02", "2026-01-06", "2026-01-08", "2026-01-12", "2026-01-14", "2026-01-16", "2026-01-21", "2026-01-23", "2026-01-27", "2026-01-29", "2026-02-02", "2026-02-04", "2026-02-06", "2026-02-10", "2026-02-12", "2026-02-17", "2026-02-19", "2026-02-23", "2026-02-25", "2026-02-27", "2026-03-03", "2026-03-05", "2026-03-09", "2026-03-11", "2026-03-13", "2026-03-17", "2026-03-19", "2026-03-23", "2026-03-25", "2026-03-27", "2026-03-31", "2026-04-02"];
+const CLOSE = [4796.56,4700.58,4677.03,4713.07,4659.03,4577.11,4482.73,4410.13,4349.93,4431.85,4546.54,4477.44,4483.87,4587.18,4418.64,4471.07,4380.26,4304.76,4288.7,4373.94,4386.54,4328.87,4170.7,4259.52,4173.11,4357.86,4463.12,4511.61,4520.16,4575.52,4602.45,4545.86,4525.12,4500.21,4412.53,4446.59,4391.69,4459.45,4271.78,4175.2,4287.5,4155.38,4175.48,4300.17,4123.34,4001.05,3930.08,4008.01,3923.68,3901.36,3941.48,4057.84,4132.15,4176.82,4121.43,4115.77,3900.86,3735.48,3666.77,3764.79,3795.73,3900.11,3818.83,3825.33,3845.08,3899.38,3818.8,3790.38,3830.85,3959.9,3961.63,3921.05,4072.43,4118.63,4155.17,4145.19,4122.47,4207.27,4297.14,4274.04,4228.48,4128.73,4199.12,4030.61,3955.0,3924.26,3979.87,4067.36,3932.69,3901.35,3899.89,3789.93,3693.23,3647.29,3640.47,3678.43,3783.28,3639.66,3577.03,3583.07,3719.98,3665.78,3797.34,3830.6,3901.06,3856.1,3719.89,3806.8,3748.57,3957.25,3958.79,3965.34,4003.58,4026.12,3957.63,4076.57,3998.84,3933.92,3934.38,4019.65,3895.75,3817.66,3878.44,3844.82,3783.22,3839.5,3852.97,3895.08,3919.25,3983.17,3990.97,3898.85,4019.81,4016.22,4070.56,4076.6,4179.76,4111.08,4117.86,4090.46,4136.13,4090.41,3997.34,4012.32,3982.24,3951.39,4045.64,3986.37,3918.32,3855.76,3891.93,3916.64,4002.87,3948.72,3977.53,4027.81,4109.31,4100.6,4105.02,4108.94,4146.22,4151.32,4154.52,4133.52,4071.63,4135.35,4167.87,4090.75,4136.25,4119.17,4130.62,4136.28,4158.77,4191.98,4145.58,4151.28,4205.52,4221.02,4273.79,4267.52,4298.86,4369.01,4425.84,4409.59,4388.71,4381.89,4328.82,4376.86,4450.38,4446.82,4398.95,4439.26,4510.04,4522.79,4565.72,4536.34,4567.46,4537.41,4588.96,4513.39,4478.03,4499.38,4468.83,4489.72,4404.33,4369.71,4387.55,4376.31,4433.31,4514.87,4515.77,4465.48,4457.49,4461.9,4505.1,4453.53,4402.2,4320.06,4273.53,4299.7,4288.39,4263.75,4308.5,4376.95,4327.78,4373.2,4278.0,4217.04,4186.77,4117.37,4193.8,4317.78,4365.98,4382.78,4411.55,4502.88,4514.02,4538.19,4559.34,4554.89,4567.8,4569.78,4549.34,4604.37,4643.7,4719.55,4740.56,4698.35,4754.63,4781.58,4769.83,4704.81,4697.24,4756.5,4780.24,4765.98,4780.94,4850.43,4868.55,4890.97,4924.97,4906.19,4942.81,4995.06,5026.61,4953.17,5029.73,4975.51,5087.03,5069.53,5069.76,5137.08,5078.65,5157.36,5117.94,5165.31,5117.09,5178.51,5241.53,5218.19,5248.49,5243.77,5211.49,5204.34,5209.91,5199.06,5061.82,5022.21,4967.23,5070.55,5048.42,5116.17,5018.39,5127.79,5187.7,5214.08,5221.42,5308.15,5303.27,5321.41,5267.84,5306.04,5235.48,5283.4,5354.03,5346.99,5375.32,5433.74,5473.23,5473.17,5447.87,5477.9,5460.48,5509.01,5567.19,5576.98,5584.54,5631.22,5588.27,5505.0,5555.74,5399.22,5463.54,5522.3,5346.56,5240.03,5319.31,5344.39,5455.21,5554.25,5597.12,5570.64,5616.84,5592.18,5648.4,5520.07,5408.42,5495.52,5595.76,5633.09,5618.26,5702.55,5732.93,5745.37,5762.48,5709.54,5751.07,5751.13,5780.05,5815.26,5841.47,5853.98,5797.42,5808.12,5832.92,5705.45,5712.69,5929.04,5973.1,5995.54,5985.38,5870.62,5916.98,5948.71,5987.37,5998.74,6047.15,6086.49,6090.27,6034.91,6051.25,6074.08,5872.16,5930.85,6037.59,5906.94,5868.55,5975.38,5918.25,5836.22,5949.91,5996.66,6086.37,6101.24,6067.7,6071.17,5994.57,6061.48,6025.99,6068.5,6115.07,6129.58,6117.52,5983.25,5956.06,5954.5,5778.15,5738.52,5614.56,5599.3,5638.94,5614.66,5662.89,5767.57,5712.2,5580.94,5633.07,5396.52,5062.25,5456.9,5363.36,5396.63,5282.7,5287.76,5484.77,5528.75,5569.06,5686.67,5606.91,5663.94,5844.19,5892.58,5958.38,5940.46,5842.01,5921.54,5912.17,5935.94,5970.81,5939.3,6000.36,6038.81,6045.26,6033.11,5980.87,6025.17,6092.16,6173.07,6198.01,6279.35,6225.52,6280.46,6268.56,6263.7,6296.79,6309.62,6363.35,6389.77,6362.9,6238.01,6299.19,6340.0,6373.45,6466.58,6449.8,6411.37,6370.17,6439.32,6481.4,6460.26,6448.26,6481.5,6512.61,6587.47,6615.28,6600.35,6664.36,6656.92,6604.72,6661.21,6711.2,6715.79,6714.59,6735.11,6644.31,6629.07,6735.13,6699.4,6791.69,6890.89,6822.34,6851.97,6796.29,6728.8,6850.92,6734.11,6617.32,6538.76,6705.12,6812.61,6812.63,6849.72,6870.4,6840.51,6901.0,6816.51,6721.43,6834.5,6909.79,6896.24,6858.47,6944.82,6921.46,6977.27,6926.6,6940.01,6875.62,6915.61,6978.6,6969.01,6976.44,6882.72,6932.3,6941.81,6832.76,6843.22,6861.89,6837.75,6946.13,6878.88,6816.63,6830.71,6795.99,6775.8,6632.19,6716.09,6606.49,6581.0,6591.9,6368.85,6528.52,6582.69];
+const MA50  = [4661.93,4669.58,4674.51,4678.14,4680.97,4678.95,4671.28,4660.8,4648.29,4635.78,4629.16,4622.87,4614.72,4611.9,4608.75,4603.89,4595.43,4581.13,4563.79,4552.09,4540.16,4529.66,4508.65,4487.85,4463.96,4445.11,4432.72,4424.72,4416.58,4411.24,4411.12,4412.34,4418.33,4423.83,4426.68,4422.32,4416.67,4415.41,4406.55,4397.52,4389.5,4378.14,4374.67,4374.58,4369.7,4354.37,4337.82,4324.61,4317.43,4302.72,4293.48,4281.8,4270.11,4256.22,4241.29,4224.45,4198.14,4166.32,4133.3,4102.46,4075.56,4054.92,4032.04,4005.82,3986.04,3972.65,3956.69,3942.79,3927.15,3919.68,3919.05,3919.5,3920.78,3925.51,3934.39,3942.03,3946.55,3949.09,3955.08,3962.06,3966.78,3973.74,3990.83,4003.46,4013.5,4020.21,4021.73,4030.39,4039.04,4042.46,4041.88,4041.34,4038.52,4030.68,4019.94,4006.01,3999.74,3985.5,3954.26,3933.18,3915.43,3896.0,3877.25,3859.0,3842.01,3829.24,3813.44,3799.86,3791.05,3792.26,3793.51,3790.28,3788.49,3792.61,3795.58,3805.79,3818.18,3829.64,3840.4,3855.33,3861.66,3867.38,3877.36,3885.76,3892.79,3898.26,3903.44,3904.37,3907.84,3911.43,3918.92,3925.66,3932.81,3939.38,3943.0,3945.87,3953.61,3959.49,3964.06,3969.07,3971.41,3974.76,3978.78,3980.89,3979.73,3980.34,3987.48,3994.18,3999.04,4001.14,4003.58,4007.58,4012.61,4014.09,4014.01,4014.19,4020.84,4025.49,4028.73,4030.48,4033.35,4033.15,4034.39,4034.02,4034.75,4033.11,4035.1,4037.77,4041.66,4047.76,4054.69,4059.36,4064.04,4073.63,4086.05,4095.15,4105.83,4114.76,4128.17,4140.23,4152.1,4163.06,4174.53,4180.91,4186.58,4197.17,4205.95,4215.28,4226.03,4238.81,4250.85,4264.0,4276.89,4293.25,4311.72,4327.99,4345.07,4361.95,4380.0,4394.0,4406.83,4421.86,4432.37,4443.43,4449.15,4452.92,4456.81,4458.9,4459.71,4464.0,4469.52,4475.22,4478.29,4480.34,4481.74,4483.61,4483.55,4476.91,4468.56,4457.64,4447.74,4435.16,4424.41,4410.87,4404.11,4399.12,4391.63,4381.8,4371.93,4361.53,4353.36,4348.0,4346.84,4343.45,4336.16,4336.89,4339.16,4341.89,4344.75,4348.78,4354.23,4364.52,4374.63,4386.94,4400.74,4419.4,4437.27,4452.72,4468.22,4485.32,4502.62,4521.53,4539.96,4563.88,4589.47,4611.83,4628.71,4647.63,4667.69,4686.86,4703.94,4718.54,4734.85,4751.52,4769.9,4787.04,4804.35,4821.65,4839.22,4857.07,4871.49,4886.96,4901.82,4917.04,4930.74,4946.49,4962.89,4981.73,5000.65,5018.43,5036.47,5056.03,5070.57,5082.94,5095.48,5105.62,5114.29,5117.73,5118.31,5119.44,5122.35,5126.06,5127.52,5129.98,5134.19,5139.26,5143.48,5150.38,5157.15,5164.91,5169.59,5176.45,5179.94,5181.84,5185.7,5190.66,5195.42,5204.17,5215.23,5226.19,5237.25,5252.49,5269.88,5289.99,5310.46,5331.05,5351.1,5374.95,5396.22,5409.84,5424.21,5431.85,5439.21,5446.38,5449.65,5446.68,5444.84,5448.56,5455.14,5464.18,5474.29,5483.4,5491.33,5497.59,5503.2,5505.93,5505.22,5505.68,5509.0,5512.1,5514.16,5518.11,5522.21,5526.45,5535.48,5541.44,5553.93,5564.42,5576.69,5606.9,5631.79,5652.89,5670.29,5682.68,5692.56,5698.58,5703.3,5712.69,5720.31,5728.38,5753.84,5772.0,5788.88,5803.2,5817.15,5832.51,5845.77,5859.47,5873.42,5885.17,5899.51,5912.99,5922.51,5927.02,5938.25,5942.13,5942.76,5948.15,5952.33,5952.47,5957.94,5967.79,5976.27,5981.3,5983.19,5986.71,5992.12,5997.43,6001.26,6003.78,6006.5,6009.44,6011.44,6008.51,6004.35,5998.63,5988.69,5985.53,5975.12,5957.0,5942.65,5933.45,5921.85,5914.01,5910.52,5900.15,5886.37,5865.01,5823.33,5790.53,5760.95,5736.3,5705.48,5672.2,5646.72,5624.46,5602.17,5582.75,5567.97,5555.65,5549.41,5552.43,5558.32,5568.7,5579.01,5590.29,5600.51,5610.69,5620.82,5624.07,5629.83,5645.24,5661.69,5680.54,5717.09,5748.16,5779.21,5809.44,5846.34,5887.55,5919.45,5949.24,5977.21,6001.55,6028.28,6054.68,6079.05,6099.03,6116.2,6129.67,6148.52,6167.73,6186.98,6208.27,6227.81,6246.23,6260.66,6277.43,6296.18,6316.15,6333.56,6349.55,6363.42,6377.75,6391.61,6406.64,6421.69,6438.14,6452.84,6467.06,6482.75,6496.92,6510.45,6525.55,6544.44,6557.56,6570.95,6583.26,6595.16,6612.5,6630.62,6647.72,6660.97,6670.29,6694.41,6704.17,6709.81,6711.04,6713.21,6720.63,6727.94,6734.51,6744.21,6751.85,6759.61,6763.87,6765.2,6767.61,6779.23,6800.34,6805.01,6813.19,6816.7,6819.94,6824.5,6829.72,6832.84,6838.19,6842.82,6852.33,6864.84,6877.23,6885.68,6892.25,6894.5,6894.5,6894.82,6896.02,6896.99,6899.87,6903.4,6905.22,6900.17,6894.08,6884.14,6878.37,6866.05,6850.95,6835.05,6814.16,6793.92,6783.63];
+const MA200 = [4387.04,4395.26,4403.13,4410.32,4417.59,4423.3,4427.61,4430.52,4432.7,4435.02,4438.58,4442.38,4445.72,4449.39,4452.04,4454.53,4457.14,4458.24,4459.11,4462.03,4463.8,4466.05,4466.33,4467.09,4467.0,4468.07,4470.44,4473.02,4475.67,4478.83,4482.49,4485.64,4489.22,4491.69,4493.46,4494.76,4495.6,4496.73,4496.66,4495.25,4493.89,4491.89,4491.47,4491.36,4489.08,4484.87,4480.18,4476.27,4472.28,4467.13,4462.37,4458.15,4454.96,4451.71,4448.83,4445.61,4440.29,4432.82,4424.84,4416.74,4409.24,4403.26,4396.83,4390.26,4384.11,4379.56,4373.7,4367.17,4362.08,4358.24,4354.81,4350.44,4347.15,4344.83,4341.51,4337.96,4333.85,4330.38,4327.63,4324.52,4320.86,4315.49,4310.19,4303.97,4297.02,4289.56,4282.03,4275.49,4268.75,4261.74,4255.2,4247.85,4238.72,4228.39,4218.28,4207.88,4199.3,4190.14,4172.96,4161.33,4150.59,4139.45,4130.22,4121.93,4113.27,4105.3,4097.15,4090.64,4084.69,4078.68,4073.12,4067.34,4062.19,4056.91,4051.91,4048.33,4044.4,4040.51,4037.43,4033.69,4029.68,4024.57,4021.21,4016.86,4013.03,4008.38,4002.39,3996.04,3990.21,3984.39,3978.17,3971.92,3966.35,3961.6,3957.76,3954.01,3951.58,3948.21,3946.29,3944.8,3943.81,3943.56,3941.56,3940.23,3940.03,3940.31,3940.29,3940.4,3940.94,3939.95,3938.82,3936.75,3935.14,3933.41,3931.77,3932.18,3935.55,3939.39,3943.17,3946.48,3948.62,3951.86,3955.35,3958.29,3960.32,3962.91,3966.64,3969.22,3970.72,3972.21,3974.11,3974.93,3975.03,3975.75,3975.95,3975.97,3975.94,3975.06,3974.94,3975.14,3976.77,3978.61,3982.16,3984.28,3986.44,3990.73,3994.67,3998.08,4002.1,4007.38,4012.56,4018.58,4026.23,4034.86,4043.67,4052.7,4060.44,4069.04,4078.89,4088.11,4096.7,4104.72,4112.31,4118.79,4124.81,4129.65,4135.51,4142.12,4148.14,4154.67,4160.04,4165.1,4170.08,4175.06,4179.66,4184.57,4188.02,4190.91,4194.59,4197.97,4200.81,4203.82,4208.3,4216.04,4221.06,4226.63,4231.27,4235.18,4238.41,4240.24,4242.13,4245.31,4249.58,4253.2,4258.33,4262.85,4266.47,4270.66,4274.83,4279.5,4283.72,4288.35,4293.55,4299.49,4306.06,4313.58,4320.75,4327.91,4335.86,4345.06,4353.77,4361.62,4368.78,4376.95,4385.02,4392.78,4399.58,4406.9,4414.59,4422.43,4430.5,4437.82,4445.78,4454.21,4463.29,4472.2,4480.67,4489.52,4498.88,4508.38,4517.78,4527.65,4537.35,4546.71,4556.23,4566.6,4575.88,4585.52,4595.07,4604.57,4613.87,4622.82,4630.92,4638.68,4647.0,4655.42,4662.57,4668.7,4674.08,4680.43,4686.79,4692.96,4698.09,4703.45,4709.93,4716.33,4723.03,4729.95,4737.5,4745.75,4753.53,4761.9,4769.65,4778.24,4787.77,4797.33,4806.95,4817.03,4826.49,4836.17,4845.92,4856.12,4866.09,4876.15,4887.15,4898.67,4911.51,4924.69,4938.09,4950.46,4963.59,4974.89,4986.03,4997.2,5007.65,5016.35,5026.43,5037.55,5050.38,5064.44,5078.31,5090.89,5103.42,5115.86,5127.93,5138.18,5147.63,5157.04,5167.21,5177.98,5188.65,5199.91,5211.58,5222.97,5234.14,5244.1,5254.06,5263.96,5274.31,5290.06,5300.92,5312.55,5323.49,5333.88,5344.34,5354.41,5363.51,5373.5,5379.02,5384.52,5400.66,5411.0,5420.54,5430.13,5439.79,5450.02,5460.26,5471.04,5481.52,5491.17,5501.1,5510.56,5519.13,5526.81,5539.98,5547.79,5555.21,5562.78,5569.54,5575.75,5582.2,5589.62,5598.51,5607.57,5616.12,5625.06,5634.67,5645.0,5655.66,5665.62,5675.72,5686.18,5697.07,5705.51,5713.19,5720.09,5725.89,5730.77,5734.63,5737.35,5740.29,5743.87,5748.0,5752.3,5756.21,5759.04,5761.28,5762.29,5758.17,5755.68,5754.26,5753.46,5751.58,5748.58,5747.18,5746.4,5746.05,5746.01,5746.63,5747.76,5750.37,5754.97,5759.85,5764.52,5770.29,5776.71,5782.4,5787.75,5792.46,5794.38,5796.34,5800.48,5804.79,5808.63,5812.52,5816.6,5822.41,5829.58,5836.35,5842.77,5848.71,5854.77,5860.31,5865.57,5871.12,5876.84,5883.4,5890.06,5896.01,5900.93,5905.7,5910.7,5915.92,5922.24,5928.74,5934.76,5941.0,5948.32,5954.5,5959.47,5963.86,5969.1,5975.32,5981.75,5988.16,5994.15,6000.47,6006.74,6012.15,6017.95,6024.36,6031.0,6037.65,6046.4,6055.93,6062.39,6070.44,6078.56,6086.79,6096.9,6107.06,6116.09,6123.7,6129.92,6141.66,6148.47,6154.74,6160.15,6166.14,6173.36,6180.83,6188.01,6195.34,6203.79,6213.17,6222.31,6231.78,6241.92,6253.94,6280.6,6292.67,6305.21,6317.25,6329.52,6342.6,6355.8,6368.83,6387.29,6404.74,6421.31,6436.88,6453.09,6469.51,6484.74,6498.34,6511.09,6523.35,6535.8,6548.51,6559.93,6569.52,6578.65,6586.81,6596.16,6604.06,6612.14,6619.05,6624.78,6630.83,6634.83,6638.86,6644.6];
+const PS_RAW  = [0.677,0.286,0.271,0.421,0.457,0.63,0.301,1.854,0.712,0.969,0.708,0.256,0.459,0.301,0.268,0.413,0.257,0.676,0.323,0.695,0.32,0.288,0.507,0.503,0.555,0.791,0.417,0.419,0.526,0.609,0.529,0.432,0.159,0.544,0.657,0.708,1.019,0.483,0.268,0.75,0.977,1.066,1.176,0.475,0.664,0.85,1.055,1.978,0.727,1.054,0.724,0.862,0.556,0.513,0.443,0.494,0.513,1.13,1.106,1.075,0.688,0.873,0.506,1.362,0.265,0.354,0.219,0.972,0.822,0.538,0.339,0.623,0.679,0.519,0.279,0.349,0.5,0.294,0.561,0.261,0.33,0.53,0.625,0.667,0.78,0.569,0.627,0.53,0.441,0.5,0.457,0.731,0.795,1.302,1.135,1.09,0.274,0.468,0.836,0.656,0.574,0.319,0.373,0.432,0.309,0.256,0.338,0.672,0.373,0.348,0.439,0.43,0.502,0.526,0.59,0.597,0.309,0.69,0.438,0.62,0.56,0.543,0.607,0.387,0.845,0.53,0.302,0.213,0.276,0.29,0.32,0.286,0.36,0.168,0.322,0.454,0.438,0.227,0.181,0.223,0.375,0.135,0.241,0.17,0.25,0.159,0.127,0.192,0.27,0.946,1.043,0.453,0.592,0.531,1.115,0.6,0.5,0.268,0.413,0.609,0.431,0.586,0.304,0.508,0.623,1.118,0.915,0.676,0.799,0.805,0.86,1.066,0.58,0.515,0.603,0.615,0.893,0.73,0.353,0.261,0.333,0.298,0.338,0.285,0.325,0.317,0.912,0.398,0.373,0.384,0.172,0.38,0.232,0.224,0.459,0.282,0.508,0.208,0.256,0.209,0.237,0.34,0.263,0.449,0.418,0.359,0.534,0.669,0.66,0.536,0.314,0.29,0.412,0.496,0.593,0.54,0.427,0.51,0.56,0.767,0.637,0.247,0.432,0.494,0.444,0.388,0.589,0.5,1.121,0.939,1.175,0.92,0.654,0.686,0.755,0.652,0.395,0.547,0.467,0.691,0.4,0.404,0.359,0.295,0.285,0.472,0.33,0.172,0.212,0.382,0.217,0.285,0.146,0.233,0.167,0.529,0.225,0.233,0.343,0.384,0.506,0.61,0.296,0.279,0.272,0.285,0.221,0.184,0.202,0.234,0.265,0.196,0.127,0.184,0.227,0.224,0.271,0.259,0.153,0.413,0.425,0.67,0.148,0.286,0.272,0.333,0.384,0.318,0.273,0.35,0.426,0.569,0.504,0.26,0.443,0.325,0.282,0.322,0.236,0.247,0.441,0.477,0.525,0.433,0.212,0.348,0.376,0.322,0.58,0.193,0.487,0.242,0.518,0.425,0.34,0.215,0.455,0.212,0.32,0.301,0.297,0.433,0.378,0.271,0.169,0.47,0.614,0.537,0.385,0.244,0.368,0.238,0.362,0.238,0.294,0.239,0.324,0.389,0.411,0.43,0.203,0.239,0.318,0.214,0.704,0.216,0.247,0.165,0.19,0.281,0.389,0.414,0.324,0.557,0.308,0.267,0.425,0.233,0.097,0.066,0.178,0.213,0.312,0.529,0.344,0.17,0.331,0.137,0.212,0.289,0.247,0.642,0.235,0.415,0.42,0.423,0.646,0.172,0.183,0.5,0.38,0.213,0.314,0.299,0.394,0.45,0.35,0.127,0.295,0.187,0.204,0.267,0.159,0.31,0.283,0.296,0.19,0.364,0.551,0.341,0.429,0.34,0.338,0.539,0.226,0.611,0.795,0.174,0.877,0.741,0.841,0.638,0.396,0.81,0.717,1.261,0.565,0.486,0.416,0.756,0.637,0.349,0.287,0.341,0.325,0.731,0.3,0.493,0.216,0.218,0.32,0.294,0.263,0.603,0.226,0.406,0.286,0.356,0.564,0.134,0.12,0.111,0.571,0.163,0.275,0.209,0.415,0.391,0.352,0.596,0.327,0.574,0.763,0.497,0.307,0.279,0.397,0.376,0.289,0.217,0.224,0.244,0.268,0.234,0.34,0.176,0.26,0.274,0.464,0.382,0.457,0.109,0.181,0.469,0.49,0.276,0.333,0.305,0.322,0.351,0.44,0.59,0.278,0.31,0.372,0.382,0.472,0.525,0.562,0.281,0.465,0.266,0.295,0.317,0.376,0.378,0.213,0.336,0.275,0.435,0.637,0.139,0.119,0.552,0.267,0.25,0.279,0.275,0.621,0.362,0.344,0.16,0.258,0.231,0.248,0.251,0.135,0.215,0.234,0.311,0.249,0.237,0.466,0.53,0.398,0.328,0.225,0.812,0.373,0.473,0.435,0.25];
+const PS_MA3  = [0.381,0.408,0.368,0.343,0.411,0.473,0.502,0.828,0.983,1.137,0.911,0.745,0.447,0.388,0.414,0.378,0.364,0.424,0.385,0.521,0.461,0.399,0.373,0.437,0.472,0.579,0.548,0.456,0.419,0.499,0.537,0.479,0.413,0.412,0.429,0.565,0.58,0.527,0.511,0.461,0.724,0.977,1.062,0.924,0.787,0.737,0.93,1.208,1.141,1.054,0.926,0.981,0.747,0.625,0.48,0.45,0.468,0.691,0.969,1.047,0.816,0.748,0.649,0.827,0.752,0.621,0.335,0.554,0.669,0.676,0.477,0.431,0.5,0.529,0.459,0.417,0.404,0.386,0.397,0.342,0.36,0.44,0.548,0.548,0.678,0.793,0.701,0.538,0.509,0.494,0.542,0.662,0.682,0.863,1.083,1.145,0.769,0.57,0.578,0.68,0.678,0.505,0.417,0.397,0.408,0.421,0.36,0.373,0.417,0.427,0.367,0.369,0.473,0.507,0.507,0.588,0.492,0.47,0.5,0.648,0.605,0.56,0.588,0.537,0.565,0.586,0.664,0.452,0.265,0.269,0.265,0.265,0.295,0.277,0.318,0.396,0.418,0.302,0.234,0.22,0.254,0.233,0.235,0.188,0.206,0.201,0.189,0.161,0.199,0.421,0.823,0.906,0.799,0.651,0.647,0.654,0.693,0.542,0.388,0.437,0.46,0.441,0.406,0.413,0.449,0.766,0.89,0.849,0.924,1.033,0.903,0.804,0.813,0.735,0.638,0.637,0.688,0.725,0.643,0.471,0.349,0.353,0.354,0.345,0.312,0.303,0.439,0.552,0.566,0.389,0.307,0.317,0.265,0.243,0.288,0.303,0.37,0.347,0.343,0.259,0.243,0.257,0.281,0.32,0.368,0.421,0.475,0.526,0.53,0.561,0.527,0.402,0.346,0.432,0.521,0.543,0.513,0.525,0.637,0.768,0.7,0.524,0.426,0.406,0.511,0.564,0.533,0.494,0.652,0.847,1.041,0.909,0.762,0.643,0.69,0.739,0.608,0.503,0.469,0.496,0.457,0.432,0.339,0.337,0.371,0.407,0.372,0.302,0.23,0.283,0.313,0.386,0.322,0.265,0.254,0.33,0.308,0.342,0.302,0.333,0.439,0.474,0.414,0.333,0.282,0.283,0.273,0.225,0.194,0.201,0.223,0.226,0.198,0.185,0.184,0.22,0.262,0.332,0.311,0.265,0.296,0.353,0.29,0.315,0.259,0.315,0.41,0.406,0.365,0.426,0.434,0.528,0.563,0.464,0.411,0.369,0.36,0.336,0.315,0.318,0.347,0.369,0.446,0.491,0.395,0.309,0.364,0.4,0.406,0.361,0.373,0.293,0.381,0.415,0.382,0.271,0.307,0.33,0.338,0.25,0.32,0.335,0.294,0.284,0.248,0.31,0.393,0.455,0.463,0.402,0.334,0.276,0.295,0.272,0.287,0.291,0.303,0.339,0.412,0.383,0.306,0.272,0.271,0.268,0.369,0.472,0.434,0.222,0.238,0.238,0.265,0.291,0.32,0.414,0.429,0.409,0.347,0.294,0.26,0.217,0.146,0.178,0.289,0.353,0.341,0.314,0.287,0.227,0.23,0.275,0.277,0.362,0.377,0.427,0.453,0.469,0.486,0.404,0.269,0.247,0.324,0.354,0.294,0.235,0.309,0.341,0.349,0.299,0.245,0.311,0.319,0.223,0.218,0.227,0.251,0.3,0.319,0.32,0.33,0.391,0.478,0.481,0.385,0.338,0.363,0.488,0.591,0.552,0.523,0.571,0.834,0.765,0.582,0.582,0.68,0.81,0.807,0.73,0.462,0.468,0.524,0.514,0.419,0.361,0.346,0.444,0.463,0.476,0.34,0.323,0.315,0.283,0.297,0.348,0.347,0.354,0.279,0.304,0.358,0.334,0.273,0.175,0.234,0.275,0.344,0.267,0.287,0.307,0.384,0.43,0.411,0.426,0.457,0.534,0.482,0.357,0.313,0.312,0.32,0.305,0.283,0.229,0.227,0.247,0.266,0.246,0.271,0.274,0.29,0.295,0.42,0.345,0.241,0.225,0.264,0.295,0.298,0.316,0.358,0.387,0.418,0.418,0.396,0.406,0.422,0.411,0.446,0.5,0.488,0.466,0.452,0.35,0.316,0.313,0.338,0.312,0.304,0.327,0.356,0.406,0.426,0.374,0.286,0.268,0.293,0.32,0.286,0.259,0.321,0.387,0.457,0.337,0.276,0.3,0.289,0.266,0.243,0.206,0.205,0.238,0.278,0.286,0.287,0.366,0.424,0.422,0.342,0.388,0.401,0.443,0.442,0.551];
+const PS_MA10 = [0.454,0.419,0.341,0.378,0.397,0.408,0.429,0.643,0.748,0.847,0.938,0.917,0.74,0.624,0.518,0.399,0.397,0.417,0.396,0.449,0.435,0.423,0.419,0.446,0.411,0.487,0.5,0.482,0.478,0.504,0.454,0.464,0.459,0.459,0.45,0.471,0.504,0.546,0.51,0.517,0.615,0.688,0.761,0.761,0.822,0.899,0.885,1.005,0.985,1.047,1.055,1.033,0.837,0.795,0.693,0.578,0.497,0.573,0.704,0.799,0.828,0.876,0.788,0.769,0.703,0.646,0.577,0.632,0.564,0.547,0.545,0.568,0.52,0.457,0.441,0.458,0.453,0.4,0.399,0.38,0.366,0.4,0.449,0.472,0.584,0.678,0.663,0.649,0.633,0.566,0.531,0.575,0.614,0.742,0.882,0.958,0.872,0.838,0.774,0.67,0.587,0.586,0.563,0.491,0.436,0.402,0.398,0.412,0.406,0.392,0.385,0.392,0.417,0.428,0.475,0.523,0.512,0.505,0.521,0.557,0.538,0.588,0.601,0.583,0.568,0.578,0.597,0.513,0.486,0.405,0.336,0.261,0.279,0.269,0.289,0.345,0.362,0.335,0.325,0.299,0.252,0.217,0.226,0.224,0.218,0.199,0.193,0.184,0.2,0.296,0.501,0.586,0.731,0.779,0.804,0.669,0.68,0.584,0.544,0.489,0.424,0.405,0.431,0.438,0.424,0.569,0.647,0.722,0.87,0.977,0.909,0.916,0.917,0.807,0.729,0.702,0.691,0.682,0.663,0.584,0.535,0.45,0.378,0.347,0.344,0.333,0.392,0.427,0.44,0.455,0.438,0.389,0.309,0.281,0.276,0.294,0.295,0.323,0.332,0.311,0.299,0.279,0.27,0.285,0.32,0.354,0.408,0.465,0.493,0.52,0.525,0.472,0.44,0.447,0.446,0.471,0.496,0.538,0.585,0.652,0.657,0.64,0.598,0.542,0.477,0.481,0.514,0.54,0.603,0.701,0.778,0.839,0.834,0.802,0.74,0.694,0.608,0.617,0.574,0.531,0.454,0.449,0.397,0.382,0.353,0.374,0.364,0.349,0.318,0.324,0.279,0.321,0.315,0.343,0.303,0.35,0.285,0.329,0.31,0.359,0.354,0.42,0.392,0.397,0.36,0.325,0.271,0.253,0.241,0.223,0.219,0.204,0.207,0.202,0.204,0.202,0.223,0.273,0.279,0.3,0.32,0.309,0.293,0.308,0.302,0.302,0.331,0.351,0.384,0.418,0.445,0.469,0.514,0.5,0.488,0.468,0.395,0.365,0.349,0.337,0.34,0.361,0.384,0.429,0.402,0.391,0.403,0.377,0.37,0.381,0.387,0.347,0.364,0.365,0.355,0.33,0.347,0.331,0.287,0.296,0.322,0.314,0.296,0.289,0.278,0.289,0.32,0.353,0.392,0.414,0.392,0.348,0.323,0.29,0.282,0.283,0.291,0.318,0.352,0.364,0.342,0.335,0.312,0.271,0.312,0.374,0.366,0.348,0.35,0.298,0.248,0.269,0.28,0.34,0.36,0.375,0.385,0.375,0.334,0.285,0.242,0.219,0.226,0.254,0.299,0.308,0.326,0.277,0.253,0.262,0.267,0.305,0.334,0.373,0.413,0.448,0.462,0.444,0.382,0.348,0.333,0.274,0.282,0.3,0.299,0.297,0.307,0.292,0.298,0.312,0.288,0.27,0.272,0.269,0.238,0.258,0.277,0.3,0.336,0.349,0.401,0.424,0.42,0.414,0.409,0.42,0.475,0.485,0.523,0.605,0.662,0.641,0.654,0.673,0.631,0.679,0.711,0.698,0.633,0.622,0.529,0.471,0.436,0.442,0.395,0.41,0.413,0.429,0.407,0.393,0.393,0.339,0.31,0.319,0.318,0.328,0.315,0.323,0.32,0.307,0.284,0.264,0.277,0.24,0.26,0.277,0.302,0.305,0.326,0.367,0.379,0.404,0.442,0.463,0.43,0.421,0.403,0.354,0.314,0.304,0.298,0.271,0.261,0.25,0.252,0.237,0.26,0.265,0.28,0.279,0.344,0.312,0.3,0.295,0.293,0.232,0.259,0.288,0.303,0.337,0.379,0.411,0.402,0.41,0.422,0.407,0.434,0.465,0.487,0.462,0.483,0.423,0.382,0.357,0.341,0.311,0.309,0.325,0.335,0.355,0.397,0.383,0.351,0.347,0.316,0.266,0.289,0.291,0.301,0.322,0.363,0.338,0.362,0.34,0.315,0.283,0.28,0.258,0.235,0.236,0.241,0.251,0.281,0.322,0.349,0.364,0.368,0.407,0.387,0.381,0.413,0.478];
+const SCORE   = [0.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,-1.0,-1.0,-1.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-2.0,-2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,0.0,0.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-2.0,-3.0,0.0,-2.0,-3.0,-3.0,-1.0,-1.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,-2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,-1.0,-1.0,0.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-3.0,-3.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,-1.0,-3.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,-1.0,-1.0,0.0,0.0];
+const SCORE_COLORS = ["rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#00ff88", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "#ff5050", "#ff5050", "rgba(255,170,0,0.4)", "rgba(255,170,0,0.4)"];
+const SIG_PTS = {"sig_A": {"labels": [], "values": []}, "sig_B": {"labels": [], "values": []}, "sig_C": {"labels": ["2022-05-03"], "values": [4175.48]}, "sig_D": {"labels": [], "values": []}, "sig_sell": {"labels": ["2023-06-16", "2024-11-07", "2024-11-08", "2025-06-05"], "values": [4409.59, 5973.1, 5995.54, 5939.3]}};
+const PS_RAW_MED=0.38, PS_RAW_MEAN=0.437, PS_RAW_P75=0.539, PS_RAW_P25=0.271;
+const PS_MA3_MED=0.394, PS_MA3_MEAN=0.436, PS_MA3_P75=0.508, PS_MA3_P25=0.304;
+const PS10_MED=0.393,   PS10_MEAN=0.436,   PS10_P75=0.509,   PS10_P25=0.312;
+
+// === CHARTS ===
+
+// ── SPX ──────────────────────────────────────────────────────────
+(function() {
+  var sigStyles = {
+    sig_A:    {label:'CRISIS BOTTOM', color:'#ffd060', r:8, shape:'star'},
+    sig_B:    {label:'REGIME SHIFT',  color:'#00ff88', r:7, shape:'triangle'},
+    sig_C:    {label:'CLUSTER BUY',   color:'#00c8ff', r:6, shape:'circle'},
+    sig_D:    {label:'OVERSOLD+INS',  color:'#cc88ff', r:6, shape:'rectRot'},
+  };
+  var sigDS = Object.keys(sigStyles).map(function(k) {
+    var st = sigStyles[k];
+    var pts = SIG_PTS[k];
+    return {
+      type: 'scatter',
+      label: st.label,
+      data: pts.labels.map(function(lbl, i) { return {x: lbl, y: pts.values[i]}; }),
+      backgroundColor: st.color,
+      borderColor: '#080700',
+      borderWidth: 1,
+      pointRadius: st.r,
+      pointStyle: st.shape,
+      order: 0
+    };
+  });
+  var datasets = [
+    {type:'line', label:'SPX CLOSE', data:CLOSE, borderColor:'#ff9800',
+     borderWidth:2, fill:false, pointRadius:0, tension:0, order:10},
+    {type:'line', label:'MA50',  data:MA50,  borderColor:'#00c8ff',
+     borderWidth:1, borderDash:[4,3], fill:false, pointRadius:0, tension:0, order:9},
+    {type:'line', label:'MA200', data:MA200, borderColor:'#ffb700',
+     borderWidth:1.2, borderDash:[6,3], fill:false, pointRadius:0, tension:0, order:9}
+  ].concat(sigDS);
+
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cSpx'), {
+    type: 'line',
+    data: { labels: DATES, datasets: datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend: {display:true, position:'bottom',
+          labels: {color:C.tick, font:{family:F,size:11,weight:'500'}, boxWidth:10, padding:8,
+            filter: function(item) { return !item.text.startsWith('_'); }}},
+        tooltip: TT()
+      },
+      scales: {
+        x: {type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:12, maxRotation:0}},
+        y: {grid:{color:C.grid, borderDash:[2,4]},
+            ticks:{...TK(), callback:function(v){return '$'+Math.round(v).toLocaleString();}}}
+      }
+    }
+  }));
+})();
+
+// ── P/S RAW ──────────────────────────────────────────────────────
+(function() {
+  var n = DATES.length;
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cPs'), {
+    type: 'line',
+    data: { labels: DATES, datasets: [
+      {label:'P/S RAW', data:PS_RAW, borderColor:'#00c8ff', borderWidth:1.5,
+       fill:false, pointRadius:0, tension:0.2},
+      hline(PS_RAW_MED,  'rgba(255,183,0,0.7)',  [],    'MEDIAN'),
+      hline(PS_RAW_MEAN, 'rgba(255,200,0,0.5)',  [6,4], 'MEAN'),
+      hline(PS_RAW_P75,  'rgba(0,229,255,0.55)',  [3,3], 'P75'),
+      hline(PS_RAW_P25,  'rgba(255,68,68,0.55)',  [3,3], 'P25')
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend:{display:true, position:'bottom', labels:{
+          color:C.tick, font:{family:F,size:11,weight:'500'},
+          boxWidth:22, padding:10,
+          filter:function(item){ var t=item.text; return t!=='_ref'&&t!=='MEDIAN'&&t!=='MEAN'&&t!=='P75'&&t!=='P25'; }
+        }},
+        tooltip:{...TT(), callbacks:{
+          label:function(ctx){
+            var lbl = ctx.dataset.label||'';
+            if (lbl === '_ref') return null;
+            if (['MEDIAN','MEAN','P75','P25'].includes(lbl)) return null;
+            return lbl+': '+ctx.parsed.y;
+          }
+        }}
+      },
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK()}
+      }
+    }
+  }));
+})();
+
+// ── P/S 3D ───────────────────────────────────────────────────────
+(function() {
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cPs3'), {
+    type: 'line',
+    data: { labels: DATES, datasets: [
+      {label:'P/S 3D AVG', data:PS_MA3, borderColor:'#00ff88', borderWidth:1.5,
+       fill:false, pointRadius:0, tension:0.2},
+      hline(PS_MA3_MED,  'rgba(255,183,0,0.7)',  [],    'MEDIAN'),
+      hline(PS_MA3_MEAN, 'rgba(255,200,0,0.5)',  [6,4], 'MEAN'),
+      hline(PS_MA3_P75,  'rgba(0,229,255,0.55)',  [3,3], 'P75'),
+      hline(PS_MA3_P25,  'rgba(255,68,68,0.55)',  [3,3], 'P25')
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend:{display:true, position:'bottom', labels:{
+          color:C.tick, font:{family:F,size:11,weight:'500'},
+          boxWidth:22, padding:10,
+          filter:function(item){ var t=item.text; return t!=='_ref'&&t!=='MEDIAN'&&t!=='MEAN'&&t!=='P75'&&t!=='P25'; }
+        }},
+        tooltip:{...TT(), callbacks:{
+          label:function(ctx){
+            var lbl = ctx.dataset.label||'';
+            if (lbl === '_ref') return null;
+            if (['MEDIAN','MEAN','P75','P25'].includes(lbl)) return null;
+            return lbl+': '+ctx.parsed.y;
+          }
+        }}
+      },
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK()}
+      }
+    }
+  }));
+})();
+
+// ── P/S 10D ──────────────────────────────────────────────────────
+(function() {
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cPs10'), {
+    type: 'line',
+    data: { labels: DATES, datasets: [
+      {label:'P/S 10D AVG', data:PS_MA10, borderColor:'#cc88ff', borderWidth:1.5,
+       fill:false, pointRadius:0, tension:0.2},
+      hline(PS10_MED,  'rgba(255,183,0,0.7)',  [],    'MEDIAN'),
+      hline(PS10_MEAN, 'rgba(255,200,0,0.5)',  [6,4], 'MEAN'),
+      hline(PS10_P75,  'rgba(0,229,255,0.55)',  [3,3], 'P75'),
+      hline(PS10_P25,  'rgba(255,68,68,0.55)',  [3,3], 'P25')
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend:{display:true, position:'bottom', labels:{
+          color:C.tick, font:{family:F,size:11,weight:'500'},
+          boxWidth:22, padding:10,
+          filter:function(item){ var t=item.text; return t!=='_ref'&&t!=='MEDIAN'&&t!=='MEAN'&&t!=='P75'&&t!=='P25'; }
+        }},
+        tooltip:{...TT(), callbacks:{
+          label:function(ctx){
+            var lbl = ctx.dataset.label||'';
+            if (lbl === '_ref') return null;
+            if (['MEDIAN','MEAN','P75','P25'].includes(lbl)) return null;
+            return lbl+': '+ctx.parsed.y;
+          }
+        }}
+      },
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK()}
+      }
+    }
+  }));
+})();
+
+// ── SCORE ────────────────────────────────────────────────────────
+(function() {
+  window._SYNC_CHARTS.push(new Chart(document.getElementById('cScore'), {
+    type: 'bar',
+    data: { labels: DATES, datasets: [
+      {label:'INSIDER SCORE', data:SCORE, backgroundColor:SCORE_COLORS,
+       borderWidth:0, barPercentage:0.95}
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {legend:{display:false}, tooltip:TT()},
+      scales: {
+        x:{type:'category', grid:{color:C.grid}, ticks:{...TK(), maxTicksLimit:10, maxRotation:0}},
+        y:{grid:{color:C.grid, borderDash:[2,4]}, ticks:TK(), min:-4, max:4}
+      }
+    }
+  }));
+})();
+
+_initSync();
+_initBrush();
+
+</script>
+</body></html>
